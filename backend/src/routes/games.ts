@@ -2,7 +2,7 @@ import type { FastifyInstance } from 'fastify';
 import type { GameStatus } from '@prisma/client';
 import { telegramAuth } from '../middleware/telegramAuth.js';
 import { bot } from '../bot/index.js';
-import { sendGameMessage, updateGameMessage } from '../bot/messages.js';
+import { sendGameMessage, updateGameMessage, sendTeamReadyNotification } from '../bot/messages.js';
 import * as gameService from '../services/game.service.js';
 
 export async function gameRoutes(app: FastifyInstance) {
@@ -87,6 +87,18 @@ export async function gameRoutes(app: FastifyInstance) {
         user,
       );
       await tryUpdateGroupMessage(request, game);
+
+      if (game?.status === 'TEAM_READY') {
+        const chatId = process.env.GROUP_CHAT_ID;
+        if (chatId) {
+          try {
+            await sendTeamReadyNotification(bot, chatId, game);
+          } catch (err) {
+            request.log.error(err, 'Failed to send team ready notification');
+          }
+        }
+      }
+
       return game;
     } catch (err: any) {
       reply.code(400);

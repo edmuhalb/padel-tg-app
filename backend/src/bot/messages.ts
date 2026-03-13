@@ -70,10 +70,10 @@ export function formatGameMessage(game: GameWithDetails): string {
   return lines.join('\n');
 }
 
-function getMiniAppKeyboard(): InlineKeyboard {
+function getGroupKeyboard(): InlineKeyboard {
   const miniAppUrl = process.env.MINI_APP_URL;
   if (!miniAppUrl) return new InlineKeyboard();
-  return new InlineKeyboard().webApp('Открыть', miniAppUrl);
+  return new InlineKeyboard().url('Открыть приложение', miniAppUrl);
 }
 
 export async function sendGameMessage(
@@ -84,9 +84,37 @@ export async function sendGameMessage(
   const text = formatGameMessage(game);
   const result = await bot.api.sendMessage(chatId, text, {
     parse_mode: 'HTML',
-    reply_markup: getMiniAppKeyboard(),
+    reply_markup: getGroupKeyboard(),
   });
   return result.message_id;
+}
+
+export async function sendTeamReadyNotification(
+  bot: Bot,
+  chatId: string,
+  game: GameWithDetails,
+): Promise<void> {
+  const scheduledAt = game.scheduledAt instanceof Date ? game.scheduledAt : new Date(game.scheduledAt);
+  const date = scheduledAt.toLocaleDateString('ru-RU', { day: 'numeric', month: 'long' });
+  const time = scheduledAt.toLocaleTimeString('ru-RU', { hour: '2-digit', minute: '2-digit' });
+
+  const players = game.participants
+    .map((p) => p.user.username ? `@${p.user.username}` : p.user.firstName)
+    .join(', ');
+
+  const text = [
+    `🎉 <b>Команда собрана!</b>`,
+    ``,
+    `📅 ${date}, ${time} — ${game.location}`,
+    `👥 ${players}`,
+    ``,
+    `Все на месте, ждём игры!`,
+  ].join('\n');
+
+  await bot.api.sendMessage(chatId, text, {
+    parse_mode: 'HTML',
+    reply_markup: getGroupKeyboard(),
+  });
 }
 
 export async function updateGameMessage(
@@ -98,6 +126,6 @@ export async function updateGameMessage(
   const text = formatGameMessage(game);
   await bot.api.editMessageText(chatId, messageId, text, {
     parse_mode: 'HTML',
-    reply_markup: getMiniAppKeyboard(),
+    reply_markup: getGroupKeyboard(),
   });
 }
