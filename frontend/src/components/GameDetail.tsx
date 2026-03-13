@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { useGame, useJoinGame, useLeaveGame, useUpdateGame } from '../hooks/useGames';
 import { StatusBadge } from './StatusBadge';
+import { EditGameForm } from './EditGameForm';
 import { LEVEL_LABELS, type GameStatus } from '../types';
 
 interface Props {
@@ -17,6 +18,7 @@ export function GameDetail({ gameId, currentUserId, onBack }: Props) {
   const [confirmCancel, setConfirmCancel] = useState(false);
   const [joinComment, setJoinComment] = useState('');
   const [showJoinForm, setShowJoinForm] = useState(false);
+  const [editing, setEditing] = useState(false);
 
   if (isLoading || !game) {
     return (
@@ -44,6 +46,7 @@ export function GameDetail({ gameId, currentUserId, onBack }: Props) {
   });
   const costPerPerson = Math.ceil(game.courtCost / game.maxPlayers);
 
+  const canEdit = isCreator && (game.status === 'RECRUITING' || game.status === 'TEAM_READY');
   const canJoin = game.status === 'RECRUITING' && !isParticipant && !isFull;
   const canLeave = (game.status === 'RECRUITING' || game.status === 'TEAM_READY') && isParticipant;
   const canComplete = isCreator && game.status === 'TEAM_READY';
@@ -52,6 +55,16 @@ export function GameDetail({ gameId, currentUserId, onBack }: Props) {
   function handleStatusChange(status: GameStatus) {
     updateMutation.mutate({ id: game!.id, status });
     setConfirmCancel(false);
+  }
+
+  if (editing && game) {
+    return (
+      <EditGameForm
+        game={game}
+        onSaved={() => setEditing(false)}
+        onCancel={() => setEditing(false)}
+      />
+    );
   }
 
   return (
@@ -66,7 +79,17 @@ export function GameDetail({ gameId, currentUserId, onBack }: Props) {
       <div className="px-4">
         <div className="flex items-center justify-between mb-4">
           <h2 className="text-xl font-bold text-tg-text">Падел</h2>
-          <StatusBadge status={game.status} />
+          <div className="flex items-center gap-2">
+            {canEdit && (
+              <button
+                onClick={() => setEditing(true)}
+                className="text-xs font-medium text-tg-link px-3 py-1.5 bg-tg-button/10 rounded-lg active:opacity-70 transition-opacity"
+              >
+                Изменить
+              </button>
+            )}
+            <StatusBadge status={game.status} />
+          </div>
         </div>
 
         <div className="space-y-3 mb-6">

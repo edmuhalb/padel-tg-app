@@ -63,6 +63,9 @@ export const api = {
       location: string;
       courtCost: number;
       maxPlayers: number;
+      duration: number;
+      comment: string;
+      desiredLevel: PlayerLevel;
       status: GameStatus;
     }>,
   ): Promise<Game> {

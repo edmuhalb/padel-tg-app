@@ -69,7 +69,16 @@ export async function gameRoutes(app: FastifyInstance) {
 
   app.patch<{
     Params: { id: string };
-    Body: Partial<{ scheduledAt: string; location: string; courtCost: number; maxPlayers: number; status: GameStatus }>;
+    Body: Partial<{
+      scheduledAt: string;
+      location: string;
+      courtCost: number;
+      maxPlayers: number;
+      duration: number;
+      comment: string;
+      desiredLevel: PlayerLevel;
+      status: GameStatus;
+    }>;
   }>('/api/games/:id', async (request, reply) => {
     const user = request.telegramUser;
     try {

@@ -73,7 +73,7 @@ export async function getGame(id: number) {
 export async function updateGame(
   id: number,
   creatorId: bigint,
-  data: Partial<Pick<CreateGameData, 'scheduledAt' | 'location' | 'courtCost' | 'maxPlayers'>> & { status?: GameStatus },
+  data: Partial<Pick<CreateGameData, 'scheduledAt' | 'location' | 'courtCost' | 'maxPlayers' | 'duration' | 'comment' | 'desiredLevel'>> & { status?: GameStatus },
 ) {
   const game = await prisma.game.findUnique({ where: { id } });
   if (!game) throw new Error('Game not found');
@@ -84,6 +84,9 @@ export async function updateGame(
   if (data.location) updateData.location = data.location;
   if (data.courtCost !== undefined) updateData.courtCost = data.courtCost;
   if (data.maxPlayers !== undefined) updateData.maxPlayers = data.maxPlayers;
+  if (data.duration !== undefined) updateData.duration = data.duration;
+  if (data.comment !== undefined) updateData.comment = data.comment || null;
+  if (data.desiredLevel !== undefined) updateData.desiredLevel = data.desiredLevel || null;
   if (data.status) updateData.status = data.status;
 
   return prisma.game.update({
