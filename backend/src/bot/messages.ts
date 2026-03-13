@@ -34,12 +34,13 @@ const STATUS_LABELS: Record<string, string> = {
 };
 
 export function formatGameMessage(game: GameWithDetails): string {
-  const date = game.scheduledAt.toLocaleDateString('ru-RU', {
+  const scheduledAt = game.scheduledAt instanceof Date ? game.scheduledAt : new Date(game.scheduledAt);
+  const date = scheduledAt.toLocaleDateString('ru-RU', {
     weekday: 'short',
     day: 'numeric',
     month: 'long',
   });
-  const time = game.scheduledAt.toLocaleTimeString('ru-RU', {
+  const time = scheduledAt.toLocaleTimeString('ru-RU', {
     hour: '2-digit',
     minute: '2-digit',
   });

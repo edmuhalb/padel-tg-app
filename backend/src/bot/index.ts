@@ -22,3 +22,17 @@ bot.command('start', async (ctx) => {
 bot.command('chatid', async (ctx) => {
   await ctx.reply(`Chat ID: <code>${ctx.chat.id}</code>`, { parse_mode: 'HTML' });
 });
+
+bot.command('testmsg', async (ctx) => {
+  const chatId = process.env.GROUP_CHAT_ID;
+  if (!chatId) {
+    await ctx.reply('GROUP_CHAT_ID не задан');
+    return;
+  }
+  try {
+    await ctx.api.sendMessage(chatId, '✅ Тестовое сообщение — бот работает!');
+    await ctx.reply(`Сообщение отправлено в чат ${chatId}`);
+  } catch (err: any) {
+    await ctx.reply(`Ошибка: ${err.message}`);
+  }
+});
