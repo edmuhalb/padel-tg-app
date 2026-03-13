@@ -24,6 +24,16 @@ bot.command('start', async (ctx) => {
   });
 });
 
+bot.command('app', async (ctx) => {
+  const keyboard = new InlineKeyboard().url(
+    '🎾 Открыть Падел',
+    `https://t.me/${ctx.me.username}?startapp`,
+  );
+  await ctx.reply('Нажмите кнопку, чтобы открыть приложение:', {
+    reply_markup: keyboard,
+  });
+});
+
 bot.command('chatid', async (ctx) => {
   await ctx.reply(`Chat ID: <code>${ctx.chat.id}</code>`, { parse_mode: 'HTML' });
 });
