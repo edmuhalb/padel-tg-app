@@ -4,6 +4,8 @@ import { GameList } from './components/GameList';
 import { GameDetail } from './components/GameDetail';
 import { CreateGameForm } from './components/CreateGameForm';
 import { Profile } from './components/Profile';
+import { Button } from '@/components/ui/button';
+import { UserIcon } from 'lucide-react';
 import type { Game } from './types';
 
 const queryClient = new QueryClient({
@@ -32,8 +34,8 @@ function AuthError() {
   return (
     <div className="flex flex-col items-center justify-center min-h-screen px-6 text-center">
       <span className="text-4xl mb-4">🔒</span>
-      <h2 className="text-lg font-bold text-tg-text mb-2">Нет доступа</h2>
-      <p className="text-sm text-tg-hint">
+      <h2 className="text-lg font-bold text-foreground mb-2">Нет доступа</h2>
+      <p className="text-sm text-muted-foreground">
         Откройте приложение через Telegram, чтобы авторизоваться.
       </p>
     </div>
@@ -82,29 +84,26 @@ function AppContent() {
     <div className="pb-24">
       <div className="px-4 pt-4 pb-3 flex items-center justify-between">
         <div>
-          <h1 className="text-2xl font-bold text-tg-text">Падел 🎾</h1>
-          <p className="text-sm text-tg-hint mt-1">Найди команду для игры</p>
+          <h1 className="text-2xl font-bold text-foreground">Падел 🎾</h1>
+          <p className="text-sm text-muted-foreground mt-1">Найди команду для игры</p>
         </div>
-        <button
+        <Button
+          variant="ghost"
+          size="icon"
           onClick={() => setView('profile')}
-          className="w-10 h-10 rounded-full bg-tg-button/15 flex items-center justify-center text-tg-button active:opacity-70 transition-opacity"
+          className="rounded-full bg-primary/10 text-primary"
           aria-label="Профиль"
         >
-          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className="w-5 h-5">
-            <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 3c1.66 0 3 1.34 3 3s-1.34 3-3 3-3-1.34-3-3 1.34-3 3-3zm0 14.2c-2.5 0-4.71-1.28-6-3.22.03-1.99 4-3.08 6-3.08 1.99 0 5.97 1.09 6 3.08-1.29 1.94-3.5 3.22-6 3.22z"/>
-          </svg>
-        </button>
+          <UserIcon className="w-5 h-5" />
+        </Button>
       </div>
 
       <GameList onSelect={handleSelect} currentUserId={currentUserId} />
 
-      <div className="fixed bottom-0 left-0 right-0 p-4 bg-tg-bg/80 backdrop-blur-sm border-t border-tg-hint/10">
-        <button
-          onClick={() => setView('create')}
-          className="w-full py-3 bg-tg-button text-tg-button-text font-semibold rounded-xl active:opacity-80 transition-opacity"
-        >
+      <div className="fixed bottom-0 left-0 right-0 p-4 bg-background/80 backdrop-blur-sm border-t border-border">
+        <Button className="w-full" size="lg" onClick={() => setView('create')}>
           Создать игру
-        </button>
+        </Button>
       </div>
     </div>
   );

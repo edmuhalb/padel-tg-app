@@ -1,6 +1,9 @@
 import { useState } from 'react';
 import { useCreateGame } from '../hooks/useGames';
 import { LEVEL_LABELS, type PlayerLevel } from '../types';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
+import { Button } from '@/components/ui/button';
 
 const DURATION_OPTIONS = [60, 90, 120];
 const LEVEL_OPTIONS: (PlayerLevel | null)[] = [null, 'BEGINNER', 'CONFIDENT', 'EXPERIENCED'];
@@ -59,154 +62,128 @@ export function CreateGameForm({ onCreated, onCancel }: Props) {
   return (
     <form onSubmit={handleSubmit} className="pb-6">
       <div className="flex items-center justify-between px-4 pt-4 mb-6">
-        <button type="button" onClick={onCancel} className="text-sm text-tg-link">
+        <Button type="button" variant="ghost" size="sm" onClick={onCancel}>
           Отмена
-        </button>
-        <h2 className="text-lg font-bold text-tg-text">Новая игра</h2>
-        <button
+        </Button>
+        <h2 className="text-lg font-bold text-foreground">Новая игра</h2>
+        <Button
           type="submit"
+          variant="ghost"
+          size="sm"
           disabled={createMutation.isPending || !location.trim() || !courtCost}
-          className="text-sm font-semibold text-tg-link disabled:text-tg-hint/40"
         >
           {createMutation.isPending ? '...' : 'Создать'}
-        </button>
+        </Button>
       </div>
 
       <div className="px-4 space-y-4">
-        <div>
-          <label className="block text-sm font-medium text-tg-text mb-1">
-            Дата и время
-          </label>
-          <input
+        <div className="space-y-1.5">
+          <Label>Дата и время</Label>
+          <Input
             type="datetime-local"
             value={scheduledAt}
             onChange={(e) => { setScheduledAt(e.target.value); setDateError(''); }}
             min={new Date().toISOString().slice(0, 16)}
-            className="w-full px-3 py-2.5 border border-tg-hint/20 rounded-xl text-sm bg-tg-secondary-bg text-tg-text focus:outline-none focus:ring-2 focus:ring-tg-button/30"
             required
           />
           {dateError && (
-            <p className="text-xs text-tg-destructive mt-1">{dateError}</p>
+            <p className="text-xs text-destructive mt-1">{dateError}</p>
           )}
         </div>
 
-        <div>
-          <label className="block text-sm font-medium text-tg-text mb-1">
-            Площадка
-          </label>
-          <input
+        <div className="space-y-1.5">
+          <Label>Площадка</Label>
+          <Input
             type="text"
             value={location}
             onChange={(e) => setLocation(e.target.value)}
             placeholder="Название или адрес"
-            className="w-full px-3 py-2.5 border border-tg-hint/20 rounded-xl text-sm bg-tg-secondary-bg text-tg-text placeholder:text-tg-hint focus:outline-none focus:ring-2 focus:ring-tg-button/30"
             required
           />
         </div>
 
-        <div>
-          <label className="block text-sm font-medium text-tg-text mb-1">
-            Стоимость корта (₽)
-          </label>
-          <input
+        <div className="space-y-1.5">
+          <Label>Стоимость корта (₽)</Label>
+          <Input
             type="number"
             value={courtCost}
             onChange={(e) => setCourtCost(e.target.value)}
             placeholder="2000"
             min="0"
-            className="w-full px-3 py-2.5 border border-tg-hint/20 rounded-xl text-sm bg-tg-secondary-bg text-tg-text placeholder:text-tg-hint focus:outline-none focus:ring-2 focus:ring-tg-button/30"
             required
           />
           {costPerPerson > 0 && (
-            <p className="text-xs text-tg-hint mt-1">
+            <p className="text-xs text-muted-foreground mt-1">
               {costPerPerson}₽ с человека
             </p>
           )}
         </div>
 
-        <div>
-          <label className="block text-sm font-medium text-tg-text mb-2">
-            Длительность
-          </label>
+        <div className="space-y-1.5">
+          <Label>Длительность</Label>
           <div className="flex gap-2">
             {DURATION_OPTIONS.map((d) => (
-              <button
+              <Button
                 key={d}
                 type="button"
+                variant={duration === d ? 'default' : 'secondary'}
+                className="flex-1"
                 onClick={() => setDuration(d)}
-                className={`flex-1 py-2.5 rounded-xl text-sm font-medium transition-colors ${
-                  duration === d
-                    ? 'bg-tg-button text-tg-button-text'
-                    : 'bg-tg-secondary-bg text-tg-hint'
-                }`}
               >
                 {d} мин
-              </button>
+              </Button>
             ))}
           </div>
         </div>
 
-        <div>
-          <label className="block text-sm font-medium text-tg-text mb-2">
-            Количество игроков
-          </label>
+        <div className="space-y-1.5">
+          <Label>Количество игроков</Label>
           <div className="flex gap-3">
             {([2, 4] as const).map((n) => (
-              <button
+              <Button
                 key={n}
                 type="button"
+                variant={maxPlayers === n ? 'default' : 'secondary'}
+                className="flex-1"
                 onClick={() => setMaxPlayers(n)}
-                className={`flex-1 py-2.5 rounded-xl text-sm font-medium transition-colors ${
-                  maxPlayers === n
-                    ? 'bg-tg-button text-tg-button-text'
-                    : 'bg-tg-secondary-bg text-tg-hint'
-                }`}
               >
                 {n} игрока
-              </button>
+              </Button>
             ))}
           </div>
         </div>
 
-        <div>
-          <label className="block text-sm font-medium text-tg-text mb-2">
-            Желаемый уровень
-          </label>
+        <div className="space-y-1.5">
+          <Label>Желаемый уровень</Label>
           <div className="grid grid-cols-2 gap-2">
             {LEVEL_OPTIONS.map((lvl) => (
-              <button
+              <Button
                 key={lvl ?? 'any'}
                 type="button"
+                variant={desiredLevel === lvl ? 'default' : 'secondary'}
                 onClick={() => setDesiredLevel(lvl)}
-                className={`py-2.5 rounded-xl text-sm font-medium transition-colors ${
-                  desiredLevel === lvl
-                    ? 'bg-tg-button text-tg-button-text'
-                    : 'bg-tg-secondary-bg text-tg-hint'
-                }`}
               >
                 {lvl ? LEVEL_LABELS[lvl] : 'Любой'}
-              </button>
+              </Button>
             ))}
           </div>
         </div>
 
-        <div>
-          <label className="block text-sm font-medium text-tg-text mb-1">
-            Комментарий
-          </label>
+        <div className="space-y-1.5">
+          <Label>Комментарий</Label>
           <textarea
             value={comment}
             onChange={(e) => setComment(e.target.value)}
             placeholder="Доп. информация для участников"
             rows={2}
             maxLength={300}
-            className="w-full px-3 py-2.5 border border-tg-hint/20 rounded-xl text-sm bg-tg-secondary-bg text-tg-text placeholder:text-tg-hint focus:outline-none focus:ring-2 focus:ring-tg-button/30 resize-none"
+            className="flex w-full rounded-lg border border-input bg-background px-3 py-2 text-sm text-foreground shadow-sm shadow-black/5 transition-shadow placeholder:text-muted-foreground/70 focus-visible:border-ring focus-visible:outline-none focus-visible:ring-[3px] focus-visible:ring-ring/20 resize-none"
           />
         </div>
       </div>
 
       {createMutation.isError && (
-        <p className="text-sm text-tg-destructive text-center mt-4 px-4">
+        <p className="text-sm text-destructive text-center mt-4 px-4">
           {createMutation.error.message}
         </p>
       )}

@@ -38,7 +38,16 @@ body {
   --color-card-foreground: var(--tg-theme-text-color);
   --color-primary: var(--tg-theme-button-color);
   --color-primary-foreground: var(--tg-theme-button-text-color);
+  --color-secondary: var(--tg-theme-secondary-bg-color);
+  --color-secondary-foreground: var(--tg-theme-text-color);
   --color-muted: var(--tg-theme-secondary-bg-color);
   --color-muted-foreground: var(--tg-theme-hint-color);
+  --color-accent: var(--tg-theme-secondary-bg-color);
+  --color-accent-foreground: var(--tg-theme-text-color);
+  --color-destructive: var(--tg-theme-destructive-text-color);
+  --color-destructive-foreground: #ffffff;
+  --color-border: color-mix(in srgb, var(--tg-theme-hint-color) 25%, transparent);
+  --color-input: color-mix(in srgb, var(--tg-theme-hint-color) 25%, transparent);
   --color-ring: var(--tg-theme-button-color);
+  --color-ring-offset-background: var(--tg-theme-bg-color);
 }

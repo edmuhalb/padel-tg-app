@@ -3,6 +3,7 @@ import { useGame, useJoinGame, useLeaveGame, useUpdateGame } from '../hooks/useG
 import { StatusBadge } from './StatusBadge';
 import { EditGameForm } from './EditGameForm';
 import { LEVEL_LABELS, type GameStatus } from '../types';
+import { Button } from '@/components/ui/button';
 
 interface Props {
   gameId: number;
@@ -23,7 +24,7 @@ export function GameDetail({ gameId, currentUserId, onBack }: Props) {
   if (isLoading || !game) {
     return (
       <div className="flex items-center justify-center h-48">
-        <div className="animate-spin w-8 h-8 border-2 border-blue-500 border-t-transparent rounded-full" />
+        <div className="animate-spin w-8 h-8 border-2 border-primary border-t-transparent rounded-full" />
       </div>
     );
   }
@@ -69,24 +70,23 @@ export function GameDetail({ gameId, currentUserId, onBack }: Props) {
 
   return (
     <div className="pb-6">
-      <button
+      <Button
+        variant="ghost"
+        size="sm"
         onClick={onBack}
-        className="flex items-center gap-1 text-sm text-tg-link mb-4 px-4 pt-4"
+        className="mb-4 mx-4 mt-4"
       >
         ← Назад
-      </button>
+      </Button>
 
       <div className="px-4">
         <div className="flex items-center justify-between mb-4">
-          <h2 className="text-xl font-bold text-tg-text">Падел</h2>
+          <h2 className="text-xl font-bold text-foreground">Падел</h2>
           <div className="flex items-center gap-2">
             {canEdit && (
-              <button
-                onClick={() => setEditing(true)}
-                className="text-xs font-medium text-tg-link px-3 py-1.5 bg-tg-button/10 rounded-lg active:opacity-70 transition-opacity"
-              >
+              <Button variant="outline" size="sm" onClick={() => setEditing(true)}>
                 Изменить
-              </button>
+              </Button>
             )}
             <StatusBadge status={game.status} />
           </div>
@@ -96,77 +96,77 @@ export function GameDetail({ gameId, currentUserId, onBack }: Props) {
           <div className="flex items-center gap-3">
             <span className="text-xl">📅</span>
             <div>
-              <p className="text-sm font-medium text-tg-text">{dateStr}</p>
-              <p className="text-sm text-tg-hint">{timeStr}</p>
+              <p className="text-sm font-medium text-foreground">{dateStr}</p>
+              <p className="text-sm text-muted-foreground">{timeStr}</p>
             </div>
           </div>
 
           <div className="flex items-center gap-3">
             <span className="text-xl">📍</span>
-            <p className="text-sm text-tg-text">{game.location}</p>
+            <p className="text-sm text-foreground">{game.location}</p>
           </div>
 
           <div className="flex items-center gap-3">
             <span className="text-xl">💰</span>
             <div>
-              <p className="text-sm font-medium text-tg-text">{game.courtCost}₽ за корт</p>
-              <p className="text-sm text-tg-hint">{costPerPerson}₽ с человека</p>
+              <p className="text-sm font-medium text-foreground">{game.courtCost}₽ за корт</p>
+              <p className="text-sm text-muted-foreground">{costPerPerson}₽ с человека</p>
             </div>
           </div>
 
           <div className="flex items-center gap-3">
             <span className="text-xl">⏱</span>
-            <p className="text-sm text-tg-text">{game.duration} мин</p>
+            <p className="text-sm text-foreground">{game.duration} мин</p>
           </div>
 
           {game.desiredLevel && (
             <div className="flex items-center gap-3">
               <span className="text-xl">🎯</span>
-              <p className="text-sm text-tg-text">Уровень: {LEVEL_LABELS[game.desiredLevel]}</p>
+              <p className="text-sm text-foreground">Уровень: {LEVEL_LABELS[game.desiredLevel]}</p>
             </div>
           )}
 
           {game.comment && (
             <div className="flex items-start gap-3">
               <span className="text-xl">💬</span>
-              <p className="text-sm text-tg-text whitespace-pre-wrap">{game.comment}</p>
+              <p className="text-sm text-foreground whitespace-pre-wrap">{game.comment}</p>
             </div>
           )}
         </div>
 
         <div className="mb-6">
-          <h3 className="text-sm font-semibold text-tg-hint uppercase tracking-wide mb-3">
+          <h3 className="text-sm font-semibold text-muted-foreground uppercase tracking-wide mb-3">
             Игроки ({game.participants.length}/{game.maxPlayers})
           </h3>
           <div className="space-y-2">
             {game.participants.map((p) => (
               <div
                 key={p.userId}
-                className="bg-tg-secondary-bg rounded-xl px-3 py-2.5"
+                className="bg-secondary rounded-xl px-3 py-2.5"
               >
                 <div className="flex items-center gap-3">
-                  <div className="w-8 h-8 rounded-full bg-tg-button/15 flex items-center justify-center text-sm font-medium text-tg-button shrink-0">
+                  <div className="w-8 h-8 rounded-full bg-primary/15 flex items-center justify-center text-sm font-medium text-primary shrink-0">
                     {p.user.firstName[0]}
                   </div>
                   <div className="min-w-0 flex-1">
-                    <p className="text-sm font-medium text-tg-text">
+                    <p className="text-sm font-medium text-foreground">
                       {p.user.firstName} {p.user.lastName ?? ''}
                     </p>
                     {p.user.username && (
-                      <p className="text-xs text-tg-hint">@{p.user.username}</p>
+                      <p className="text-xs text-muted-foreground">@{p.user.username}</p>
                     )}
                   </div>
                   {p.userId === game.creatorId && (
-                    <span className="text-xs text-tg-hint shrink-0">автор</span>
+                    <span className="text-xs text-muted-foreground shrink-0">автор</span>
                   )}
                 </div>
                 {p.comment && (
-                  <p className="text-xs text-tg-hint mt-1.5 ml-11 italic">«{p.comment}»</p>
+                  <p className="text-xs text-muted-foreground mt-1.5 ml-11 italic">«{p.comment}»</p>
                 )}
               </div>
             ))}
             {game.participants.length === 0 && (
-              <p className="text-sm text-tg-hint text-center py-4">
+              <p className="text-sm text-muted-foreground text-center py-4">
                 Пока никто не присоединился
               </p>
             )}
@@ -175,12 +175,9 @@ export function GameDetail({ gameId, currentUserId, onBack }: Props) {
 
         <div className="space-y-2">
           {canJoin && !showJoinForm && (
-            <button
-              onClick={() => setShowJoinForm(true)}
-              className="w-full py-3 bg-tg-button text-tg-button-text font-medium rounded-xl active:opacity-80 transition-opacity"
-            >
+            <Button className="w-full" onClick={() => setShowJoinForm(true)}>
               Присоединиться
-            </button>
+            </Button>
           )}
 
           {canJoin && showJoinForm && (
@@ -191,77 +188,82 @@ export function GameDetail({ gameId, currentUserId, onBack }: Props) {
                 placeholder="Комментарий (необязательно)"
                 rows={2}
                 maxLength={200}
-                className="w-full px-3 py-2.5 border border-tg-hint/20 rounded-xl text-sm bg-tg-secondary-bg text-tg-text placeholder:text-tg-hint focus:outline-none focus:ring-2 focus:ring-tg-button/30 resize-none"
+                className="flex w-full rounded-lg border border-input bg-background px-3 py-2 text-sm text-foreground shadow-sm shadow-black/5 transition-shadow placeholder:text-muted-foreground/70 focus-visible:border-ring focus-visible:outline-none focus-visible:ring-[3px] focus-visible:ring-ring/20 resize-none"
               />
               <div className="flex gap-2">
-                <button
+                <Button
+                  variant="secondary"
+                  className="flex-1"
                   onClick={() => { setShowJoinForm(false); setJoinComment(''); }}
-                  className="flex-1 py-3 bg-tg-secondary-bg text-tg-text font-medium rounded-xl active:opacity-80 transition-opacity"
                 >
                   Отмена
-                </button>
-                <button
+                </Button>
+                <Button
+                  className="flex-1"
                   onClick={() => joinMutation.mutate({ id: game.id, comment: joinComment.trim() || undefined })}
                   disabled={joinMutation.isPending}
-                  className="flex-1 py-3 bg-tg-button text-tg-button-text font-medium rounded-xl active:opacity-80 disabled:opacity-50 transition-opacity"
                 >
                   {joinMutation.isPending ? '...' : 'Вступить'}
-                </button>
+                </Button>
               </div>
             </div>
           )}
 
           {canLeave && (
-            <button
+            <Button
+              variant="secondary"
+              className="w-full"
               onClick={() => leaveMutation.mutate(game.id)}
               disabled={leaveMutation.isPending}
-              className="w-full py-3 bg-tg-secondary-bg text-tg-text font-medium rounded-xl active:opacity-80 disabled:opacity-50 transition-opacity"
             >
               {leaveMutation.isPending ? 'Выхожу...' : 'Покинуть игру'}
-            </button>
+            </Button>
           )}
 
           {canComplete && (
-            <button
+            <Button
+              className="w-full bg-green-500 hover:bg-green-600 text-white"
               onClick={() => handleStatusChange('COMPLETED')}
               disabled={updateMutation.isPending}
-              className="w-full py-3 bg-green-500 text-white font-medium rounded-xl active:bg-green-600 disabled:opacity-50"
             >
               Игра состоялась
-            </button>
+            </Button>
           )}
 
           {canCancel && !confirmCancel && (
-            <button
+            <Button
+              variant="destructive"
+              className="w-full"
               onClick={() => setConfirmCancel(true)}
               disabled={updateMutation.isPending}
-              className="w-full py-3 bg-tg-destructive/10 text-tg-destructive font-medium rounded-xl active:opacity-80 disabled:opacity-50 transition-opacity"
             >
               Отменить игру
-            </button>
+            </Button>
           )}
 
           {canCancel && confirmCancel && (
             <div className="flex gap-2">
-              <button
+              <Button
+                variant="secondary"
+                className="flex-1"
                 onClick={() => setConfirmCancel(false)}
-                className="flex-1 py-3 bg-tg-secondary-bg text-tg-text font-medium rounded-xl active:opacity-80 transition-opacity"
               >
                 Нет
-              </button>
-              <button
+              </Button>
+              <Button
+                variant="destructive"
+                className="flex-1"
                 onClick={() => handleStatusChange('CANCELLED')}
                 disabled={updateMutation.isPending}
-                className="flex-1 py-3 bg-tg-destructive text-white font-medium rounded-xl active:opacity-80 disabled:opacity-50 transition-opacity"
               >
                 Да, отменить
-              </button>
+              </Button>
             </div>
           )}
         </div>
 
         {(joinMutation.isError || leaveMutation.isError || updateMutation.isError) && (
-          <p className="text-sm text-tg-destructive text-center mt-3">
+          <p className="text-sm text-destructive text-center mt-3">
             {(joinMutation.error || leaveMutation.error || updateMutation.error)?.message}
           </p>
         )}
