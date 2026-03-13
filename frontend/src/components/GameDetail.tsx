@@ -172,6 +172,11 @@ export function GameDetail({ gameId, currentUserId, onBack }: Props) {
             {(joinMutation.error || leaveMutation.error || updateMutation.error)?.message}
           </p>
         )}
+
+        {/* DEBUG — удалить после отладки */}
+        <p className="text-xs text-tg-hint mt-4 text-center opacity-50">
+          me={currentUserId} creator={game.creatorId} match={String(isCreator)}
+        </p>
       </div>
     </div>
   );
