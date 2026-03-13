@@ -1,6 +1,7 @@
 import { useProfile, useUpdateProfile } from '../hooks/useGames';
 import { LEVEL_LABELS, type PlayerLevel } from '../types';
 import { Button } from '@/components/ui/button';
+import { NumberFlow } from '@/components/ui/number-flow';
 
 const LEVELS: PlayerLevel[] = ['NONE', 'BEGINNER', 'CONFIDENT', 'EXPERIENCED'];
 
@@ -63,15 +64,21 @@ export function Profile({ onBack }: Props) {
           </h3>
           <div className="grid grid-cols-3 gap-3">
             <div className="bg-secondary rounded-xl p-3 text-center">
-              <p className="text-2xl font-bold text-foreground">{profile.stats.gamesPlayed}</p>
+              <p className="text-2xl font-bold text-foreground font-tabular-nums">
+                <NumberFlow value={profile.stats.gamesPlayed} trend={false} />
+              </p>
               <p className="text-xs text-muted-foreground mt-1">Сыграно</p>
             </div>
             <div className="bg-secondary rounded-xl p-3 text-center">
-              <p className="text-2xl font-bold text-foreground">{profile.stats.gamesCreated}</p>
+              <p className="text-2xl font-bold text-foreground font-tabular-nums">
+                <NumberFlow value={profile.stats.gamesCreated} trend={false} />
+              </p>
               <p className="text-xs text-muted-foreground mt-1">Создано</p>
             </div>
             <div className="bg-secondary rounded-xl p-3 text-center">
-              <p className="text-2xl font-bold text-foreground">{profile.stats.gamesActive}</p>
+              <p className="text-2xl font-bold text-foreground font-tabular-nums">
+                <NumberFlow value={profile.stats.gamesActive} trend={false} />
+              </p>
               <p className="text-xs text-muted-foreground mt-1">Активных</p>
             </div>
           </div>

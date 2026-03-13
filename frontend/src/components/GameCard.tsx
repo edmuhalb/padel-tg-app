@@ -1,5 +1,6 @@
 import { LEVEL_LABELS, type Game } from '../types';
 import { StatusBadge } from './StatusBadge';
+import { NumberFlow } from '@/components/ui/number-flow';
 
 interface Props {
   game: Game;
@@ -49,8 +50,8 @@ export function GameCard({ game, onSelect }: Props) {
         {game.desiredLevel && (
           <span className="text-xs text-tg-hint">🎯 {LEVEL_LABELS[game.desiredLevel]}</span>
         )}
-        <p className="text-sm text-tg-hint ml-auto">
-          {costPerPerson}₽/чел
+        <p className="text-sm text-tg-hint ml-auto font-tabular-nums">
+          <NumberFlow value={costPerPerson} suffix=" ₽/чел" trend={false} />
         </p>
       </div>
     </button>
