@@ -1,9 +1,14 @@
 import { Bot, InlineKeyboard } from 'grammy';
+import { setBotUsername } from './messages.js';
 
 const token = process.env.BOT_TOKEN;
 if (!token) throw new Error('BOT_TOKEN is not set');
 
 export const bot = new Bot(token);
+
+bot.api.getMe().then((me) => {
+  setBotUsername(me.username);
+}).catch(() => {});
 
 bot.command('start', async (ctx) => {
   const miniAppUrl = process.env.MINI_APP_URL;

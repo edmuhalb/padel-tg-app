@@ -70,7 +70,16 @@ export function formatGameMessage(game: GameWithDetails): string {
   return lines.join('\n');
 }
 
+let botUsername: string | null = null;
+
+export function setBotUsername(username: string) {
+  botUsername = username;
+}
+
 function getGroupKeyboard(): InlineKeyboard {
+  if (botUsername) {
+    return new InlineKeyboard().url('Открыть приложение', `https://t.me/${botUsername}?startapp`);
+  }
   const miniAppUrl = process.env.MINI_APP_URL;
   if (!miniAppUrl) return new InlineKeyboard();
   return new InlineKeyboard().url('Открыть приложение', miniAppUrl);
