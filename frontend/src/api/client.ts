@@ -46,6 +46,9 @@ export const api = {
     location: string;
     courtCost: number;
     maxPlayers: number;
+    duration?: number;
+    comment?: string;
+    desiredLevel?: PlayerLevel;
   }): Promise<Game> {
     return request('/api/games', {
       method: 'POST',
@@ -69,8 +72,11 @@ export const api = {
     });
   },
 
-  joinGame(id: number): Promise<Game> {
-    return request(`/api/games/${id}/join`, { method: 'POST', body: '{}' });
+  joinGame(id: number, comment?: string): Promise<Game> {
+    return request(`/api/games/${id}/join`, {
+      method: 'POST',
+      body: JSON.stringify({ comment: comment || undefined }),
+    });
   },
 
   leaveGame(id: number): Promise<Game> {

@@ -26,6 +26,7 @@ export const LEVEL_LABELS: Record<PlayerLevel, string> = {
 export interface GameParticipant {
   gameId: number;
   userId: string;
+  comment: string | null;
   joinedAt: string;
   user: User;
 }
@@ -39,6 +40,9 @@ export interface Game {
   location: string;
   courtCost: number;
   maxPlayers: number;
+  duration: number;
+  comment: string | null;
+  desiredLevel: PlayerLevel | null;
   status: GameStatus;
   telegramMessageId: string | null;
   createdAt: string;

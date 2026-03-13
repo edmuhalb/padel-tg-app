@@ -1,5 +1,5 @@
 import type { FastifyInstance } from 'fastify';
-import type { GameStatus } from '@prisma/client';
+import type { GameStatus, PlayerLevel } from '@prisma/client';
 import { telegramAuth } from '../middleware/telegramAuth.js';
 import { bot } from '../bot/index.js';
 import { sendGameMessage, updateGameMessage, sendTeamReadyNotification } from '../bot/messages.js';
@@ -20,7 +20,15 @@ export async function gameRoutes(app: FastifyInstance) {
   });
 
   app.post<{
-    Body: { scheduledAt: string; location: string; courtCost: number; maxPlayers: number };
+    Body: {
+      scheduledAt: string;
+      location: string;
+      courtCost: number;
+      maxPlayers: number;
+      duration?: number;
+      comment?: string;
+      desiredLevel?: PlayerLevel;
+    };
   }>('/api/games', async (request, reply) => {
     const user = request.telegramUser;
 
@@ -78,13 +86,14 @@ export async function gameRoutes(app: FastifyInstance) {
     }
   });
 
-  app.post<{ Params: { id: string } }>('/api/games/:id/join', async (request, reply) => {
+  app.post<{ Params: { id: string }; Body: { comment?: string } }>('/api/games/:id/join', async (request, reply) => {
     const user = request.telegramUser;
     try {
       const game = await gameService.joinGame(
         parseInt(request.params.id, 10),
         BigInt(user.id),
         user,
+        request.body?.comment,
       );
       await tryUpdateGroupMessage(request, game);
 

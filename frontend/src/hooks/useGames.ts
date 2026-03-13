@@ -41,8 +41,9 @@ export function useUpdateGame() {
 export function useJoinGame() {
   const qc = useQueryClient();
   return useMutation({
-    mutationFn: (id: number) => api.joinGame(id),
-    onSuccess: (_data, id) => {
+    mutationFn: ({ id, comment }: { id: number; comment?: string }) =>
+      api.joinGame(id, comment),
+    onSuccess: (_data, { id }) => {
       qc.invalidateQueries({ queryKey: ['games'] });
       qc.invalidateQueries({ queryKey: ['game', id] });
     },

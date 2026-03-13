@@ -1,11 +1,14 @@
 import { prisma } from '../lib/prisma.js';
-import type { GameStatus } from '@prisma/client';
+import type { GameStatus, PlayerLevel } from '@prisma/client';
 
 interface CreateGameData {
   scheduledAt: string;
   location: string;
   courtCost: number;
   maxPlayers: number;
+  duration?: number;
+  comment?: string;
+  desiredLevel?: PlayerLevel;
 }
 
 interface UserData {
@@ -42,6 +45,9 @@ export async function createGame(creatorId: bigint, data: CreateGameData, userDa
       location: data.location,
       courtCost: data.courtCost,
       maxPlayers: data.maxPlayers,
+      duration: data.duration ?? 90,
+      comment: data.comment ?? null,
+      desiredLevel: data.desiredLevel ?? null,
     },
     include: gameInclude,
   });
@@ -87,7 +93,7 @@ export async function updateGame(
   });
 }
 
-export async function joinGame(gameId: number, userId: bigint, userData: UserData) {
+export async function joinGame(gameId: number, userId: bigint, userData: UserData, comment?: string) {
   return prisma.$transaction(async (tx) => {
     const game = await tx.game.findUnique({ where: { id: gameId } });
     if (!game) throw new Error('Game not found');
@@ -103,7 +109,7 @@ export async function joinGame(gameId: number, userId: bigint, userData: UserDat
     });
 
     await tx.gameParticipant.create({
-      data: { gameId, userId },
+      data: { gameId, userId, comment: comment ?? null },
     });
 
     const newCount = count + 1;

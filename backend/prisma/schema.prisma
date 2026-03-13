@@ -38,13 +38,15 @@ model Game {
   scheduledAt       DateTime
   location          String
   courtCost         Int
-  maxPlayers        Int               // 2 or 4
+  maxPlayers        Int
+  duration          Int               @default(90)
+  comment           String?
+  desiredLevel      PlayerLevel?
   status            GameStatus        @default(RECRUITING)
   telegramMessageId String?
   createdAt         DateTime          @default(now())
   updatedAt         DateTime          @updatedAt
   participants      GameParticipant[]
-
 
   @@index([status, scheduledAt])
 }
@@ -52,6 +54,7 @@ model Game {
 model GameParticipant {
   gameId   Int
   userId   BigInt
+  comment  String?
   joinedAt DateTime @default(now())
   game     Game     @relation(fields: [gameId], references: [id], onDelete: Cascade)
   user     User     @relation(fields: [userId], references: [telegramId])

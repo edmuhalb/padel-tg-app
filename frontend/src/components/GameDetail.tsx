@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { useGame, useJoinGame, useLeaveGame, useUpdateGame } from '../hooks/useGames';
 import { StatusBadge } from './StatusBadge';
-import type { GameStatus } from '../types';
+import { LEVEL_LABELS, type GameStatus } from '../types';
 
 interface Props {
   gameId: number;
@@ -15,6 +15,8 @@ export function GameDetail({ gameId, currentUserId, onBack }: Props) {
   const leaveMutation = useLeaveGame();
   const updateMutation = useUpdateGame();
   const [confirmCancel, setConfirmCancel] = useState(false);
+  const [joinComment, setJoinComment] = useState('');
+  const [showJoinForm, setShowJoinForm] = useState(false);
 
   if (isLoading || !game) {
     return (
@@ -88,6 +90,25 @@ export function GameDetail({ gameId, currentUserId, onBack }: Props) {
               <p className="text-sm text-tg-hint">{costPerPerson}₽ с человека</p>
             </div>
           </div>
+
+          <div className="flex items-center gap-3">
+            <span className="text-xl">⏱</span>
+            <p className="text-sm text-tg-text">{game.duration} мин</p>
+          </div>
+
+          {game.desiredLevel && (
+            <div className="flex items-center gap-3">
+              <span className="text-xl">🎯</span>
+              <p className="text-sm text-tg-text">Уровень: {LEVEL_LABELS[game.desiredLevel]}</p>
+            </div>
+          )}
+
+          {game.comment && (
+            <div className="flex items-start gap-3">
+              <span className="text-xl">💬</span>
+              <p className="text-sm text-tg-text whitespace-pre-wrap">{game.comment}</p>
+            </div>
+          )}
         </div>
 
         <div className="mb-6">
@@ -98,21 +119,26 @@ export function GameDetail({ gameId, currentUserId, onBack }: Props) {
             {game.participants.map((p) => (
               <div
                 key={p.userId}
-                className="flex items-center gap-3 bg-tg-secondary-bg rounded-xl px-3 py-2.5"
+                className="bg-tg-secondary-bg rounded-xl px-3 py-2.5"
               >
-                <div className="w-8 h-8 rounded-full bg-tg-button/15 flex items-center justify-center text-sm font-medium text-tg-button">
-                  {p.user.firstName[0]}
-                </div>
-                <div>
-                  <p className="text-sm font-medium text-tg-text">
-                    {p.user.firstName} {p.user.lastName ?? ''}
-                  </p>
-                  {p.user.username && (
-                    <p className="text-xs text-tg-hint">@{p.user.username}</p>
+                <div className="flex items-center gap-3">
+                  <div className="w-8 h-8 rounded-full bg-tg-button/15 flex items-center justify-center text-sm font-medium text-tg-button shrink-0">
+                    {p.user.firstName[0]}
+                  </div>
+                  <div className="min-w-0 flex-1">
+                    <p className="text-sm font-medium text-tg-text">
+                      {p.user.firstName} {p.user.lastName ?? ''}
+                    </p>
+                    {p.user.username && (
+                      <p className="text-xs text-tg-hint">@{p.user.username}</p>
+                    )}
+                  </div>
+                  {p.userId === game.creatorId && (
+                    <span className="text-xs text-tg-hint shrink-0">автор</span>
                   )}
                 </div>
-                {p.userId === game.creatorId && (
-                  <span className="ml-auto text-xs text-tg-hint">автор</span>
+                {p.comment && (
+                  <p className="text-xs text-tg-hint mt-1.5 ml-11 italic">«{p.comment}»</p>
                 )}
               </div>
             ))}
@@ -125,14 +151,41 @@ export function GameDetail({ gameId, currentUserId, onBack }: Props) {
         </div>
 
         <div className="space-y-2">
-          {canJoin && (
+          {canJoin && !showJoinForm && (
             <button
-              onClick={() => joinMutation.mutate(game.id)}
-              disabled={joinMutation.isPending}
-              className="w-full py-3 bg-tg-button text-tg-button-text font-medium rounded-xl active:opacity-80 disabled:opacity-50 transition-opacity"
+              onClick={() => setShowJoinForm(true)}
+              className="w-full py-3 bg-tg-button text-tg-button-text font-medium rounded-xl active:opacity-80 transition-opacity"
             >
-              {joinMutation.isPending ? 'Присоединяюсь...' : 'Присоединиться'}
+              Присоединиться
             </button>
+          )}
+
+          {canJoin && showJoinForm && (
+            <div className="space-y-2">
+              <textarea
+                value={joinComment}
+                onChange={(e) => setJoinComment(e.target.value)}
+                placeholder="Комментарий (необязательно)"
+                rows={2}
+                maxLength={200}
+                className="w-full px-3 py-2.5 border border-tg-hint/20 rounded-xl text-sm bg-tg-secondary-bg text-tg-text placeholder:text-tg-hint focus:outline-none focus:ring-2 focus:ring-tg-button/30 resize-none"
+              />
+              <div className="flex gap-2">
+                <button
+                  onClick={() => { setShowJoinForm(false); setJoinComment(''); }}
+                  className="flex-1 py-3 bg-tg-secondary-bg text-tg-text font-medium rounded-xl active:opacity-80 transition-opacity"
+                >
+                  Отмена
+                </button>
+                <button
+                  onClick={() => joinMutation.mutate({ id: game.id, comment: joinComment.trim() || undefined })}
+                  disabled={joinMutation.isPending}
+                  className="flex-1 py-3 bg-tg-button text-tg-button-text font-medium rounded-xl active:opacity-80 disabled:opacity-50 transition-opacity"
+                >
+                  {joinMutation.isPending ? '...' : 'Вступить'}
+                </button>
+              </div>
+            </div>
           )}
 
           {canLeave && (

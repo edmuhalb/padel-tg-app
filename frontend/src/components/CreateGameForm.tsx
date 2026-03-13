@@ -1,5 +1,9 @@
 import { useState } from 'react';
 import { useCreateGame } from '../hooks/useGames';
+import { LEVEL_LABELS, type PlayerLevel } from '../types';
+
+const DURATION_OPTIONS = [60, 90, 120];
+const LEVEL_OPTIONS: (PlayerLevel | null)[] = [null, 'BEGINNER', 'CONFIDENT', 'EXPERIENCED'];
 
 interface Props {
   onCreated: () => void;
@@ -19,6 +23,9 @@ export function CreateGameForm({ onCreated, onCancel }: Props) {
   const [location, setLocation] = useState('');
   const [courtCost, setCourtCost] = useState('');
   const [maxPlayers, setMaxPlayers] = useState<2 | 4>(4);
+  const [duration, setDuration] = useState(90);
+  const [comment, setComment] = useState('');
+  const [desiredLevel, setDesiredLevel] = useState<PlayerLevel | null>(null);
 
   const [dateError, setDateError] = useState('');
 
@@ -38,6 +45,9 @@ export function CreateGameForm({ onCreated, onCancel }: Props) {
       location: location.trim(),
       courtCost: parseInt(courtCost, 10),
       maxPlayers,
+      duration,
+      comment: comment.trim() || undefined,
+      desiredLevel: desiredLevel ?? undefined,
     });
     onCreated();
   }
@@ -116,6 +126,28 @@ export function CreateGameForm({ onCreated, onCancel }: Props) {
 
         <div>
           <label className="block text-sm font-medium text-tg-text mb-2">
+            Длительность
+          </label>
+          <div className="flex gap-2">
+            {DURATION_OPTIONS.map((d) => (
+              <button
+                key={d}
+                type="button"
+                onClick={() => setDuration(d)}
+                className={`flex-1 py-2.5 rounded-xl text-sm font-medium transition-colors ${
+                  duration === d
+                    ? 'bg-tg-button text-tg-button-text'
+                    : 'bg-tg-secondary-bg text-tg-hint'
+                }`}
+              >
+                {d} мин
+              </button>
+            ))}
+          </div>
+        </div>
+
+        <div>
+          <label className="block text-sm font-medium text-tg-text mb-2">
             Количество игроков
           </label>
           <div className="flex gap-3">
@@ -134,6 +166,42 @@ export function CreateGameForm({ onCreated, onCancel }: Props) {
               </button>
             ))}
           </div>
+        </div>
+
+        <div>
+          <label className="block text-sm font-medium text-tg-text mb-2">
+            Желаемый уровень
+          </label>
+          <div className="grid grid-cols-2 gap-2">
+            {LEVEL_OPTIONS.map((lvl) => (
+              <button
+                key={lvl ?? 'any'}
+                type="button"
+                onClick={() => setDesiredLevel(lvl)}
+                className={`py-2.5 rounded-xl text-sm font-medium transition-colors ${
+                  desiredLevel === lvl
+                    ? 'bg-tg-button text-tg-button-text'
+                    : 'bg-tg-secondary-bg text-tg-hint'
+                }`}
+              >
+                {lvl ? LEVEL_LABELS[lvl] : 'Любой'}
+              </button>
+            ))}
+          </div>
+        </div>
+
+        <div>
+          <label className="block text-sm font-medium text-tg-text mb-1">
+            Комментарий
+          </label>
+          <textarea
+            value={comment}
+            onChange={(e) => setComment(e.target.value)}
+            placeholder="Доп. информация для участников"
+            rows={2}
+            maxLength={300}
+            className="w-full px-3 py-2.5 border border-tg-hint/20 rounded-xl text-sm bg-tg-secondary-bg text-tg-text placeholder:text-tg-hint focus:outline-none focus:ring-2 focus:ring-tg-button/30 resize-none"
+          />
         </div>
       </div>
 

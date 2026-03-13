@@ -15,6 +15,9 @@ interface GameWithDetails {
   location: string;
   courtCost: number;
   maxPlayers: number;
+  duration: number;
+  comment: string | null;
+  desiredLevel: string | null;
   status: string;
   telegramMessageId: string | null;
   participants: Participant[];
@@ -31,6 +34,13 @@ const STATUS_LABELS: Record<string, string> = {
   TEAM_READY: '✅ Команда собрана',
   COMPLETED: '🏆 Игра состоялась',
   CANCELLED: '❌ Игра не состоялась',
+};
+
+const LEVEL_LABELS: Record<string, string> = {
+  NONE: 'Не указан',
+  BEGINNER: 'Начинающий',
+  CONFIDENT: 'Играю уверенно',
+  EXPERIENCED: 'Опытный',
 };
 
 export function formatGameMessage(game: GameWithDetails): string {
@@ -60,12 +70,24 @@ export function formatGameMessage(game: GameWithDetails): string {
     ``,
     `📅 ${date}, ${time}`,
     `📍 ${game.location}`,
+    `⏱ ${game.duration} мин`,
     `💰 Корт: ${game.courtCost}₽ (${costPerPerson}₽/чел)`,
+  ];
+
+  if (game.desiredLevel && game.desiredLevel !== 'NONE') {
+    lines.push(`🎯 Уровень: ${LEVEL_LABELS[game.desiredLevel] ?? game.desiredLevel}`);
+  }
+
+  lines.push(
     `👥 Игроки: ${game.participants.length}/${game.maxPlayers}`,
     participantsList || '  —',
-    ``,
-    status,
-  ];
+  );
+
+  if (game.comment) {
+    lines.push(``, `💬 ${game.comment}`);
+  }
+
+  lines.push(``, status);
 
   return lines.join('\n');
 }
