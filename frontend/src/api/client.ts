@@ -1,4 +1,4 @@
-import type { Game, GameStatus } from '../types';
+import type { Game, GameStatus, Profile, PlayerLevel } from '../types';
 
 const API_BASE = import.meta.env.VITE_API_URL ?? '';
 
@@ -75,5 +75,16 @@ export const api = {
 
   leaveGame(id: number): Promise<Game> {
     return request(`/api/games/${id}/leave`, { method: 'POST', body: '{}' });
+  },
+
+  getProfile(): Promise<Profile> {
+    return request('/api/profile');
+  },
+
+  updateProfile(data: { level: PlayerLevel }): Promise<Profile> {
+    return request('/api/profile', {
+      method: 'PATCH',
+      body: JSON.stringify(data),
+    });
   },
 };

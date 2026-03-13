@@ -1,9 +1,27 @@
+export type PlayerLevel = 'NONE' | 'BEGINNER' | 'CONFIDENT' | 'EXPERIENCED';
+
 export interface User {
   telegramId: string;
   firstName: string;
   lastName: string | null;
   username: string | null;
+  level: PlayerLevel;
 }
+
+export interface Profile extends User {
+  stats: {
+    gamesPlayed: number;
+    gamesCreated: number;
+    gamesActive: number;
+  };
+}
+
+export const LEVEL_LABELS: Record<PlayerLevel, string> = {
+  NONE: 'Не указан',
+  BEGINNER: 'Начинающий',
+  CONFIDENT: 'Играю уверенно',
+  EXPERIENCED: 'Опытный',
+};
 
 export interface GameParticipant {
   gameId: number;

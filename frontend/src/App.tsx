@@ -3,6 +3,7 @@ import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { GameList } from './components/GameList';
 import { GameDetail } from './components/GameDetail';
 import { CreateGameForm } from './components/CreateGameForm';
+import { Profile } from './components/Profile';
 import type { Game } from './types';
 
 const queryClient = new QueryClient({
@@ -16,7 +17,7 @@ const queryClient = new QueryClient({
   },
 });
 
-type View = 'list' | 'detail' | 'create';
+type View = 'list' | 'detail' | 'create' | 'profile';
 
 function getCurrentUserId(): number | null {
   try {
@@ -54,6 +55,10 @@ function AppContent() {
     setView('detail');
   }
 
+  if (view === 'profile') {
+    return <Profile onBack={() => setView('list')} />;
+  }
+
   if (view === 'create') {
     return (
       <CreateGameForm
@@ -75,9 +80,20 @@ function AppContent() {
 
   return (
     <div className="pb-24">
-      <div className="px-4 pt-4 pb-3">
-        <h1 className="text-2xl font-bold text-tg-text">Падел 🎾</h1>
-        <p className="text-sm text-tg-hint mt-1">Найди команду для игры</p>
+      <div className="px-4 pt-4 pb-3 flex items-center justify-between">
+        <div>
+          <h1 className="text-2xl font-bold text-tg-text">Падел 🎾</h1>
+          <p className="text-sm text-tg-hint mt-1">Найди команду для игры</p>
+        </div>
+        <button
+          onClick={() => setView('profile')}
+          className="w-10 h-10 rounded-full bg-tg-button/15 flex items-center justify-center text-tg-button active:opacity-70 transition-opacity"
+          aria-label="Профиль"
+        >
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className="w-5 h-5">
+            <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 3c1.66 0 3 1.34 3 3s-1.34 3-3 3-3-1.34-3-3 1.34-3 3-3zm0 14.2c-2.5 0-4.71-1.28-6-3.22.03-1.99 4-3.08 6-3.08 1.99 0 5.97 1.09 6 3.08-1.29 1.94-3.5 3.22-6 3.22z"/>
+          </svg>
+        </button>
       </div>
 
       <GameList onSelect={handleSelect} currentUserId={currentUserId} />

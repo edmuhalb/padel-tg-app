@@ -1,6 +1,6 @@
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { api } from '../api/client';
-import type { GameStatus } from '../types';
+import type { GameStatus, PlayerLevel } from '../types';
 
 export function useGames(status?: GameStatus) {
   return useQuery({
@@ -57,5 +57,20 @@ export function useLeaveGame() {
       qc.invalidateQueries({ queryKey: ['games'] });
       qc.invalidateQueries({ queryKey: ['game', id] });
     },
+  });
+}
+
+export function useProfile() {
+  return useQuery({
+    queryKey: ['profile'],
+    queryFn: () => api.getProfile(),
+  });
+}
+
+export function useUpdateProfile() {
+  const qc = useQueryClient();
+  return useMutation({
+    mutationFn: (data: { level: PlayerLevel }) => api.updateProfile(data),
+    onSuccess: () => qc.invalidateQueries({ queryKey: ['profile'] }),
   });
 }

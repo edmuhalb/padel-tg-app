@@ -5,6 +5,7 @@ import Fastify from 'fastify';
 import cors from '@fastify/cors';
 import { bot } from './bot/index.js';
 import { gameRoutes } from './routes/games.js';
+import { profileRoutes } from './routes/profile.js';
 import { startScheduler } from './services/scheduler.js';
 import { webhookCallback } from 'grammy';
 
@@ -16,6 +17,7 @@ await app.register(cors, {
   allowedHeaders: ['Content-Type', 'Authorization'],
 });
 await app.register(gameRoutes);
+await app.register(profileRoutes);
 
 app.post('/bot', webhookCallback(bot, 'fastify'));
 
