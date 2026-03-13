@@ -18,3 +18,7 @@ bot.command('start', async (ctx) => {
     reply_markup: keyboard,
   });
 });
+
+bot.command('chatid', async (ctx) => {
+  await ctx.reply(`Chat ID: <code>${ctx.chat.id}</code>`, { parse_mode: 'HTML' });
+});
