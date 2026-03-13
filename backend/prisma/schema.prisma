@@ -1,0 +1,51 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+model User {
+  telegramId    BigInt            @id
+  firstName     String
+  lastName      String?
+  username      String?
+  createdAt     DateTime          @default(now())
+  createdGames  Game[]            @relation("GameCreator")
+  participations GameParticipant[]
+}
+
+enum GameStatus {
+  RECRUITING
+  TEAM_READY
+  COMPLETED
+  CANCELLED
+}
+
+model Game {
+  id                Int               @id @default(autoincrement())
+  creatorId         BigInt
+  creator           User              @relation("GameCreator", fields: [creatorId], references: [telegramId])
+  scheduledAt       DateTime
+  location          String
+  courtCost         Int
+  maxPlayers        Int               // 2 or 4
+  status            GameStatus        @default(RECRUITING)
+  telegramMessageId String?
+  createdAt         DateTime          @default(now())
+  updatedAt         DateTime          @updatedAt
+  participants      GameParticipant[]
+
+  @@index([status, scheduledAt])
+}
+
+model GameParticipant {
+  gameId   Int
+  userId   BigInt
+  joinedAt DateTime @default(now())
+  game     Game     @relation(fields: [gameId], references: [id], onDelete: Cascade)
+  user     User     @relation(fields: [userId], references: [telegramId])
+
+  @@id([gameId, userId])
+}
