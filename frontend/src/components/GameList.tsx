@@ -29,7 +29,8 @@ export function GameList({ onSelect, currentUserId }: Props) {
     if (currentTab.key === 'active') {
       return games.filter((g) => g.status === 'RECRUITING' || g.status === 'TEAM_READY');
     }
-    if (currentTab.key === 'my' && currentUserId != null) {
+    if (currentTab.key === 'my') {
+      if (currentUserId == null) return [];
       const uid = String(currentUserId);
       return games.filter(
         (g) =>
