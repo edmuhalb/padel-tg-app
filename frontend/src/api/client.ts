@@ -70,10 +70,10 @@ export const api = {
   },
 
   joinGame(id: number): Promise<Game> {
-    return request(`/api/games/${id}/join`, { method: 'POST' });
+    return request(`/api/games/${id}/join`, { method: 'POST', body: '{}' });
   },
 
   leaveGame(id: number): Promise<Game> {
-    return request(`/api/games/${id}/leave`, { method: 'POST' });
+    return request(`/api/games/${id}/leave`, { method: 'POST', body: '{}' });
   },
 };
