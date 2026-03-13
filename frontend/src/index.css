@@ -31,4 +31,14 @@ body {
   --color-tg-secondary-bg: var(--tg-theme-secondary-bg-color);
   --color-tg-section-bg: var(--tg-theme-section-bg-color);
   --color-tg-destructive: var(--tg-theme-destructive-text-color);
+
+  --color-background: var(--tg-theme-bg-color);
+  --color-foreground: var(--tg-theme-text-color);
+  --color-card: var(--tg-theme-section-bg-color);
+  --color-card-foreground: var(--tg-theme-text-color);
+  --color-primary: var(--tg-theme-button-color);
+  --color-primary-foreground: var(--tg-theme-button-text-color);
+  --color-muted: var(--tg-theme-secondary-bg-color);
+  --color-muted-foreground: var(--tg-theme-hint-color);
+  --color-ring: var(--tg-theme-button-color);
 }
