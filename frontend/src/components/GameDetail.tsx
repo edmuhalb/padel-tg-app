@@ -4,6 +4,7 @@ import { StatusBadge } from './StatusBadge';
 import { EditGameForm } from './EditGameForm';
 import { LEVEL_LABELS, type GameStatus } from '../types';
 import { Button } from '@/components/ui/button';
+import { Textarea } from '@/components/ui/textarea';
 
 interface Props {
   gameId: number;
@@ -182,13 +183,13 @@ export function GameDetail({ gameId, currentUserId, onBack }: Props) {
 
           {canJoin && showJoinForm && (
             <div className="space-y-2">
-              <textarea
+              <Textarea
                 value={joinComment}
                 onChange={(e) => setJoinComment(e.target.value)}
                 placeholder="Комментарий (необязательно)"
                 rows={2}
                 maxLength={200}
-                className="flex w-full rounded-lg border border-input bg-background px-3 py-2 text-sm text-foreground shadow-sm shadow-black/5 transition-shadow placeholder:text-muted-foreground/70 focus-visible:border-ring focus-visible:outline-none focus-visible:ring-[3px] focus-visible:ring-ring/20 resize-none"
+                className="resize-none min-h-[60px]"
               />
               <div className="flex gap-2">
                 <Button

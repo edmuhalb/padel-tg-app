@@ -4,6 +4,7 @@ import { LEVEL_LABELS, type Game, type PlayerLevel } from '../types';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Button } from '@/components/ui/button';
+import { Textarea } from '@/components/ui/textarea';
 
 const DURATION_OPTIONS = [60, 90, 120];
 const LEVEL_OPTIONS: (PlayerLevel | null)[] = [null, 'BEGINNER', 'CONFIDENT', 'EXPERIENCED'];
@@ -174,13 +175,13 @@ export function EditGameForm({ game, onSaved, onCancel }: Props) {
 
         <div className="space-y-1.5">
           <Label>Комментарий</Label>
-          <textarea
+          <Textarea
             value={comment}
             onChange={(e) => setComment(e.target.value)}
             placeholder="Доп. информация для участников"
             rows={2}
             maxLength={300}
-            className="flex w-full rounded-lg border border-input bg-background px-3 py-2 text-sm text-foreground shadow-sm shadow-black/5 transition-shadow placeholder:text-muted-foreground/70 focus-visible:border-ring focus-visible:outline-none focus-visible:ring-[3px] focus-visible:ring-ring/20 resize-none"
+            className="resize-none"
           />
         </div>
       </div>
