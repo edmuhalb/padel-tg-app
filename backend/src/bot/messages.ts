@@ -78,11 +78,11 @@ export function setBotUsername(username: string) {
 
 function getGroupKeyboard(): InlineKeyboard {
   if (botUsername) {
-    return new InlineKeyboard().url('Открыть приложение', `https://t.me/${botUsername}?startapp`);
+    return new InlineKeyboard().url('🎾 Открыть Падел', `https://t.me/${botUsername}/SberPadelClub`);
   }
   const miniAppUrl = process.env.MINI_APP_URL;
   if (!miniAppUrl) return new InlineKeyboard();
-  return new InlineKeyboard().url('Открыть приложение', miniAppUrl);
+  return new InlineKeyboard().url('🎾 Открыть Падел', miniAppUrl);
 }
 
 export async function sendGameMessage(
