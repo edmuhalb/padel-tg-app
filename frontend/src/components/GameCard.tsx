@@ -51,7 +51,7 @@ export function GameCard({ game, onSelect }: Props) {
           <span className="text-xs text-tg-hint">🎯 {LEVEL_LABELS[game.desiredLevel]}</span>
         )}
         <p className="text-sm text-tg-hint ml-auto font-tabular-nums">
-          <NumberFlow value={costPerPerson} suffix=" ₽/чел" trend={false} />
+          <NumberFlow value={costPerPerson} suffix=" ₽/чел" trend={0} />
         </p>
       </div>
     </button>

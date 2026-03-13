@@ -65,19 +65,19 @@ export function Profile({ onBack }: Props) {
           <div className="grid grid-cols-3 gap-3">
             <div className="bg-secondary rounded-xl p-3 text-center">
               <p className="text-2xl font-bold text-foreground font-tabular-nums">
-                <NumberFlow value={profile.stats.gamesPlayed} trend={false} />
+                <NumberFlow value={profile.stats.gamesPlayed} trend={0} />
               </p>
               <p className="text-xs text-muted-foreground mt-1">Сыграно</p>
             </div>
             <div className="bg-secondary rounded-xl p-3 text-center">
               <p className="text-2xl font-bold text-foreground font-tabular-nums">
-                <NumberFlow value={profile.stats.gamesCreated} trend={false} />
+                <NumberFlow value={profile.stats.gamesCreated} trend={0} />
               </p>
               <p className="text-xs text-muted-foreground mt-1">Создано</p>
             </div>
             <div className="bg-secondary rounded-xl p-3 text-center">
               <p className="text-2xl font-bold text-foreground font-tabular-nums">
-                <NumberFlow value={profile.stats.gamesActive} trend={false} />
+                <NumberFlow value={profile.stats.gamesActive} trend={0} />
               </p>
               <p className="text-xs text-muted-foreground mt-1">Активных</p>
             </div>

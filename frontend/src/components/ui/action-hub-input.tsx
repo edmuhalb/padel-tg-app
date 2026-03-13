@@ -1,13 +1,13 @@
 "use client"
 
-import { useId, useState, useRef, useEffect } from "react"
+import { useId, useState, useRef, useEffect, type ReactElement } from "react"
 import { Loader2Icon, CheckCircle2Icon, XCircleIcon } from "lucide-react"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Button } from "@/components/ui/button"
 
 interface ActionHubInputAction {
-  icon: JSX.Element
+  icon: ReactElement
   onClick: (value: string) => Promise<void> | void
   tooltip?: string
   showOnEmpty?: boolean
