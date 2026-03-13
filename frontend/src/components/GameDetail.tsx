@@ -1,3 +1,4 @@
+import { useState } from 'react';
 import { useGame, useJoinGame, useLeaveGame, useUpdateGame } from '../hooks/useGames';
 import { StatusBadge } from './StatusBadge';
 import type { GameStatus } from '../types';
@@ -13,6 +14,7 @@ export function GameDetail({ gameId, currentUserId, onBack }: Props) {
   const joinMutation = useJoinGame();
   const leaveMutation = useLeaveGame();
   const updateMutation = useUpdateGame();
+  const [confirmCancel, setConfirmCancel] = useState(false);
 
   if (isLoading || !game) {
     return (
@@ -46,11 +48,8 @@ export function GameDetail({ gameId, currentUserId, onBack }: Props) {
   const canCancel = isCreator && (game.status === 'RECRUITING' || game.status === 'TEAM_READY');
 
   function handleStatusChange(status: GameStatus) {
-    if (status === 'CANCELLED') {
-      const confirmed = window.confirm('Вы уверены, что хотите отменить игру?');
-      if (!confirmed) return;
-    }
     updateMutation.mutate({ id: game!.id, status });
+    setConfirmCancel(false);
   }
 
   return (
@@ -156,14 +155,32 @@ export function GameDetail({ gameId, currentUserId, onBack }: Props) {
             </button>
           )}
 
-          {canCancel && (
+          {canCancel && !confirmCancel && (
             <button
-              onClick={() => handleStatusChange('CANCELLED')}
+              onClick={() => setConfirmCancel(true)}
               disabled={updateMutation.isPending}
               className="w-full py-3 bg-tg-destructive/10 text-tg-destructive font-medium rounded-xl active:opacity-80 disabled:opacity-50 transition-opacity"
             >
               Отменить игру
             </button>
+          )}
+
+          {canCancel && confirmCancel && (
+            <div className="flex gap-2">
+              <button
+                onClick={() => setConfirmCancel(false)}
+                className="flex-1 py-3 bg-tg-secondary-bg text-tg-text font-medium rounded-xl active:opacity-80 transition-opacity"
+              >
+                Нет
+              </button>
+              <button
+                onClick={() => handleStatusChange('CANCELLED')}
+                disabled={updateMutation.isPending}
+                className="flex-1 py-3 bg-tg-destructive text-white font-medium rounded-xl active:opacity-80 disabled:opacity-50 transition-opacity"
+              >
+                Да, отменить
+              </button>
+            </div>
           )}
         </div>
 

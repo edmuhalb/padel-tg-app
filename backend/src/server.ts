@@ -10,7 +10,11 @@ import { webhookCallback } from 'grammy';
 
 const app = Fastify({ logger: true });
 
-await app.register(cors, { origin: true });
+await app.register(cors, {
+  origin: true,
+  methods: ['GET', 'POST', 'PATCH', 'PUT', 'DELETE', 'OPTIONS'],
+  allowedHeaders: ['Content-Type', 'Authorization'],
+});
 await app.register(gameRoutes);
 
 app.post('/bot', webhookCallback(bot, 'fastify'));
