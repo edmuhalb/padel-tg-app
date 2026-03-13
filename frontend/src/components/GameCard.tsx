@@ -34,6 +34,10 @@ export function GameCard({ game, onSelect }: Props) {
         <StatusBadge status={game.status} />
       </div>
 
+      <p className="text-xs text-tg-hint mb-1">
+        от {game.creator.firstName}{game.creator.lastName ? ` ${game.creator.lastName}` : ''}
+      </p>
+
       <div className="flex items-center gap-3 mt-3 pt-3 border-t border-tg-hint/10 flex-wrap">
         <div className="flex items-center gap-1.5">
           <span className="text-lg">👥</span>
